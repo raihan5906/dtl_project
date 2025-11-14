@@ -1,0 +1,19 @@
+
+# Ignore Python cache directory
+__pycache__/
+
+# Ignore editor/IDE settings
+.vscode/
+*.vscode
+
+# Ignore sensitive secrets
+client_secret.json
+
+# Ignore configuration/environment files
+settings.json
+required_items
+
+# Ignore commonly generated files
+*.pyc
+.env
+venv/
