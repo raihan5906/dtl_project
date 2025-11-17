@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>User Profile</title>
+<title>Home</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
@@ -55,30 +55,23 @@ body {
 
 <body class="flex items-center justify-center min-h-screen p-4">
 
-<div class="bg-white p-8 rounded-xl shadow-2xl max-w-md w-full text-center border-t-4 border-blue-600">
+<div class="bg-white p-10 rounded-xl shadow-xl max-w-md w-full text-center border-t-4 border-blue-600">
+    <h1 class="text-3xl font-bold text-gray-800 mb-8">Welcome!</h1>
+    <p class="text-gray-600 mb-8">Choose an option to begin:</p>
 
-    <h1 class="text-3xl font-bold text-gray-800 mb-2">Login Successful!</h1>
-    <p class="text-lg text-blue-600 font-semibold mb-6">
-        Welcome, {{ user.get('name', 'User') }}!
-    </p>
-
-    <div class="bg-gray-50 p-4 rounded-lg text-left mb-6">
-        <p class="text-gray-600">
-            <span class="font-medium text-gray-700">Email:</span>
-            <span class="break-all">{{ user.get('email', 'N/A') }}</span>
-        </p>
-    </div>
-
-    <p class="text-sm text-gray-500 mb-8">
-        This is your protected profile page after Google login.
-    </p>
-
-    <a href="{{ url_for('logout') }}"
-       class="inline-flex items-center justify-center w-full px-6 py-3 text-base font-medium 
-              rounded-md text-white bg-red-600 hover:bg-red-700 shadow-lg">
-       Logout
+    <!-- CREATE EVENT -->
+    <a href="#"
+       class="block w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold 
+              py-4 rounded-lg mb-4 shadow-lg transition">
+        Create Event
     </a>
 
+    <!-- JOIN EVENT -->
+    <a href="#"
+       class="block w-full bg-green-600 hover:bg-green-700 text-white font-semibold 
+              py-4 rounded-lg shadow-lg transition">
+        Join Event
+    </a>
 </div>
 
 <!-- NAVIGATION BAR -->
@@ -95,7 +88,7 @@ body {
         <span>Home</span>
     </a>
 
-    <!-- PROFILE ICON OR GOOGLE IMAGE -->
+    <!-- PROFILE ICON OR GOOGLE PHOTO -->
     <a href="{{ url_for('profile_page') }}" id="nav-profile">
         <span class="icon">
             {% if session.get('user') and session['user'].get('picture') %}
