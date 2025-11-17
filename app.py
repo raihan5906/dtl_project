@@ -10,7 +10,7 @@ app = Flask(__name__)
 # Secret key is required to store data inside "session"
 # IMPORTANT: Change this to a secure, random string for production
 app.secret_key = "a4d0cdf210ab9f7adf823b3d998f444fe91e1bb8c57b013d7d3ac120ef98cc77"
-
+#nice
 
 # -------------------------------
 # GOOGLE OAUTH CONFIGURATION
