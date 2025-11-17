@@ -1,5 +1,5 @@
 # Import required libraries
-from flask import Flask, redirect, request, url_for, session, render_template # Changed from render_template_string
+from flask import Flask, redirect, request, url_for, session, render_template_string
 import requests
 import json
 import os
@@ -31,7 +31,7 @@ REDIRECT_URI = "http://localhost:5000/callback"
 # -------------------------------
 # LOGIN PAGE ROUTE (Serves login.html)
 # -------------------------------
-# Note: Ensure login.html, register.html, and profile.html are in a 'templates' folder
+# Note: You should place login.html in a 'templates' folder
 @app.route("/")
 def index():
     # Redirect to the main login form page
@@ -39,14 +39,11 @@ def index():
 
 @app.route("/login_form")
 def login_form():
-    # Using render_template for standard Flask templating
-    return render_template('login.html') 
-
-# Route for the register page
-@app.route("/register_form")
-def register_form():
-    # Using render_template for standard Flask templating
-    return render_template('register.html')
+    # In a real app, you would use render_template('login.html') 
+    # For this environment, we serve the HTML content directly
+    with open("login.html", "r") as f:
+        html_content = f.read()
+    return html_content
 
 
 # -------------------------------
@@ -133,8 +130,17 @@ def profile_page():
     # Get logged-in user info
     user = session["user"]
 
-    # Use render_template to load the separate profile.html file
-    return render_template('profile.html', user=user)
+    # Render simple HTML showing user name and email
+    return f"""
+        <div style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
+            <h1 style="color: #1a73e8;">Login Successful!</h1>
+            <p style="font-size: 18px;">Welcome, <strong>{user.get('name', 'User')}</strong>!</p>
+            <p>Email: {user.get('email', 'N/A')}</p>
+            <p>This is your protected profile page, accessible after Google OAuth.</p>
+            <br><br>
+            <a href='{url_for("logout")}' style="color: #e53e3e; text-decoration: none; font-weight: bold;">Logout</a>
+        </div>
+    """
 
 
 # -------------------------------

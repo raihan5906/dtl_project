@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Profile</title>
+<link href="https://www.google.com/search?q=https://fonts.googleapis.com/css2%3Ffamily%3DInter:wght%40400%3B600%3B700%26display%3Dswap" rel="stylesheet">
+<!-- Tailwind CSS CDN for styling -->
+<script src="https://www.google.com/search?q=https://cdn.tailwindcss.com"></script>
+<style>
+body {
+font-family: 'Inter', sans-serif;
+background-color: #f3f4f6;
+}
+</style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+<div class="bg-white p-8 md:p-10 rounded-xl shadow-2xl max-w-md w-full text-center border-t-4 border-indigo-600">
+<!-- Removed the SVG icon (the tick mark/shield) -->
+
+<h1 class="text-3xl font-bold text-gray-800 mb-2">Login Successful!</h1>
+<p class="text-lg text-indigo-600 font-semibold mb-6">Welcome, {{ user.get('name', 'User') }}!</p>
+
+<div class="bg-gray-50 p-4 rounded-lg text-left mb-6">
+    <p class="text-gray-600">
+        <span class="font-medium text-gray-700">Email:</span> 
+        <span class="break-all">{{ user.get('email', 'N/A') }}</span>
+    </p>
+    <!-- Removed the profile picture block entirely -->
+</div>
+
+<p class="text-sm text-gray-500 mb-8">This is your protected profile page, accessible after Google OAuth.</p>
+
+<a href="{{ url_for('logout') }}" 
+   class="inline-flex items-center justify-center w-full px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-red-600 hover:bg-red-700 shadow-lg transition duration-150 ease-in-out">
+    Logout
+</a>
+
+
+</div>
+</body>
+</html>
