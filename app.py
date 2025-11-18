@@ -64,15 +64,26 @@ def register_form():
 @app.route("/google_login")
 def google_login():
     google_auth_url = (
-        "https://accounts.google.com/o/oauth2/v2/auth?"
+        "https://accounts.google.com/o/oauth2/v2/auth?" #authorization block
         "response_type=code"
-        "&client_id=" + GOOGLE_CLIENT_ID +
-        "&redirect_uri=" + REDIRECT_URI +
-        "&scope=openid%20email%20profile"
-        "&access_type=offline"
-        "&prompt=consent"
+        # Tells Google: "I want an authorization code." This code is a temporary, one-time key that 
+        # your server will exchange for the real access key later. This two-step process is what 
+        # makes the login secure.
+        "&client_id=" + GOOGLE_CLIENT_ID + #Your application's unique ID, which Google uses to 
+        #identify your specific app.
+        "&redirect_uri=" + REDIRECT_URI + #The URL where Google must send the user's browser after 
+        #they successfully log in on the Google side (our /callback route).
+        "&scope=openid%20email%20profile" #This is the most important part! It defines exactly 
+        # what information you are asking the user for access to: openid (basic ID), 
+        # email, and profile (name and picture).
+        "&access_type=offline" # Asks Google for a special refresh token later on. This allows your 
+        # app to access the user's data (if needed) even when they are not actively using your site.
+        "&prompt=consent" # Ensures Google asks the user to explicitly select an account and grant 
+        # permission every time, providing a clear consent prompt.
     )
-    return redirect(google_auth_url)
+    return redirect(google_auth_url) 
+# The final line, return redirect(google_auth_url), is what takes the user away from your 
+# application and sends them to the Google sign-in screen with this authorization request attached.
 
 
 
@@ -81,7 +92,7 @@ def google_login():
 # -------------------------------
 @app.route("/callback")
 def callback():
-    code = request.args.get("code")
+    code = request.args.get("code")  # after session creation only this code runs
     if not code:
         return redirect(url_for("login_form"))
 
@@ -112,8 +123,25 @@ def callback():
     session["user"] = user
 
     # Redirect to profile
-    return redirect(url_for("profile_page"))
+    return redirect(url_for("home_page"))
 
+# This part of your code handles the complete Google Login process from start to finish. 
+# When a user clicks “Login with Google,” they are sent to the /google_login route, where your 
+# app builds a special Google OAuth URL. This URL tells Google who your app is (client_id), 
+# where Google should send the user after login (redirect_uri), and what information your app 
+# wants (email, profile, etc.). Your code then redirects the user to this Google login page. 
+# After the user successfully logs in and gives permission, Google redirects them back to your 
+# /callback route and includes a temporary code in the URL. Your callback function takes this 
+# code and exchanges it with Google for an access token, which is a secure key that allows your 
+# server to request the user’s details. Using this access token, your code calls Google’s 
+# userinfo API to get the user’s email, name, and profile photo. This data is saved inside 
+# session["user"] so the user stays logged in across pages without logging in again. 
+# After saving the user, your app redirects them to the home page. You also have a protected 
+# /profile_page route that shows the user’s profile, but only if they are logged in 
+# (meaning session["user"] exists). If someone tries to open the profile page without logging 
+# in, they are sent back to the login page. Finally, the /logout route clears the session, 
+# logging the user out and returning them to the login form. The entire process ends with the 
+# Flask server running in debug mode, making development easier.
 
 
 # -------------------------------
