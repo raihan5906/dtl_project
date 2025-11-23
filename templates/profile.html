@@ -1,131 +1,574 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>User Profile</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.tailwindcss.com"></script>
-
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Profile</title>
 <style>
-body {
-    font-family: 'Inter', sans-serif;
-    background-color: #f3f4f6;
-}
+  :root{--blue:#2563eb;--nav-h:65px;--card-w:420px}
+  /* Basic reset */
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:Inter, Arial, sans-serif;
+    background:#f3f4f6;
+    padding: 24px 20px calc(var(--nav-h) + 24px); /* leave space for bottom nav */
+    color:#222;
+  }
 
-/* BLUE NAV BAR */
-.bottom-nav {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 65px;
-    background: #2563eb;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    z-index: 50;
-    border-top: 1px solid #1e3a8a;
-}
+  .page {
+    max-width: 960px;
+    margin: 20px auto;
+    display:flex;
+    gap:24px;
+    align-items:flex-start;
+    justify-content:center;
+    padding:0 8px;
+  }
 
-.bottom-nav a {
-    text-decoration: none;
-    color: #dbeafe;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-size: 13px;
-}
+  /* Left column (profile card) */
+  .card {
+    width: var(--card-w);
+    background:#fff;
+    border-radius:12px;
+    padding:24px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.08);
+    border-top:4px solid var(--blue);
+  }
 
-.bottom-nav a.active {
-    color: #ffffff;
-    font-weight: 600;
-}
+  .avatar-wrap {
+    display:flex;
+    gap:16px;
+    align-items:center;
+    margin-bottom:12px;
+  }
 
-.bottom-nav .icon svg, 
-.bottom-nav .icon img {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    object-fit: cover;
-}
+  .avatar {
+    width:84px;
+    height:84px;
+    border-radius:50%;
+    overflow:hidden;
+    background:#e6eefc;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border:3px solid white;
+    box-shadow:0 6px 18px rgba(0,0,0,0.08);
+  }
+
+  .avatar img{width:100%;height:100%;object-fit:cover;display:block}
+
+  .name {
+    font-size:20px;
+    font-weight:700;
+    color:#1f2937;
+  }
+
+  .email {
+    color:#4b5563;
+    font-size:13px;
+    margin-top:4px;
+  }
+
+  .info-block{
+    background:#fafafa;
+    padding:14px;
+    border-radius:10px;
+    margin-top:14px;
+  }
+
+  .info-row{
+    display:flex;
+    gap:12px;
+    margin-bottom:10px;
+    align-items:center;
+  }
+
+  .label { width:110px; font-weight:600; color:#374151; font-size:14px; }
+  .value { color:#374151; font-size:14px; flex:1; }
+
+  .skills-badge{
+    display:inline-block;
+    background:#eef2ff;
+    color:#3730a3;
+    padding:6px 10px;
+    border-radius:999px;
+    font-weight:600;
+    margin-right:6px;
+    margin-top:6px;
+    font-size:13px;
+  }
+
+  .btn {
+    display:inline-block;
+    padding:12px 16px;
+    border-radius:10px;
+    text-decoration:none;
+    font-weight:700;
+    cursor:pointer;
+    text-align:center;
+    border:none;
+  }
+
+  .btn-primary { background:var(--blue); color:#fff; box-shadow:0 8px 18px rgba(37,99,235,0.18); }
+  .btn-ghost { background:transparent; color:var(--blue); border:2px solid rgba(37,99,235,0.08); }
+
+  /* Sign out button (full width) */
+  .signout {
+    width:100%;
+    margin-top:18px;
+    padding:12px;
+    border-radius:10px;
+    background:#dc2626;
+    color:white;
+    text-decoration:none;
+    display:inline-block;
+    text-align:center;
+    font-weight:700;
+  }
+  .signout:hover { background:#b91c1c; }
+
+  /* Right column: details / edit button */
+  .right {
+    width: 420px;
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+  }
+
+  .panel {
+    background:#fff;
+    border-radius:12px;
+    padding:18px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.06);
+  }
+
+  .panel h3 { margin:0 0 8px 0; color:#111827; }
+  .muted { color:#6b7280; font-size:14px; }
+
+  /* NAV BAR */
+  .bottom-nav{
+    position:fixed;
+    left:0;
+    bottom:0;
+    width:100%;
+    height:var(--nav-h);
+    background:var(--blue);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-top:1px solid #1e3a8a;
+    z-index:60;
+  }
+
+  .nav-inner{
+    width:600px;
+    max-width:92%;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+  }
+
+  .nav-left, .nav-right {
+    display:flex;
+    gap:8px;
+    align-items:center;
+  }
+
+  .nav-link{
+    color:#dbeafe;
+    text-decoration:none;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    font-size:13px;
+  }
+
+  .nav-avatar {
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    overflow:hidden;
+    background:#fff;
+    display:inline-block;
+    border:2px solid rgba(255,255,255,0.12);
+  }
+  .nav-avatar img { width:100%; height:100%; object-fit:cover; display:block; }
+
+  /* center divider segment */
+  .nav-divider{
+    width:46px;
+    height:46px;
+    background:rgba(255,255,255,0.06);
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:rgba(255,255,255,0.85);
+    font-weight:700;
+  }
+
+  /* Modal */
+  .modal-backdrop{
+    position:fixed;
+    inset:0;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    background:rgba(0,0,0,0.45);
+    z-index:100;
+  }
+  .modal{
+    background:#fff;
+    border-radius:12px;
+    width:92%;
+    max-width:720px;
+    padding:18px;
+    box-shadow:0 30px 60px rgba(0,0,0,0.25);
+  }
+
+  .modal-header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:12px }
+  .modal-body{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+
+  .form-row { display:flex; flex-direction:column; margin-bottom:8px; }
+  input[type="text"], input[type="email"], input[type="date"], select, textarea {
+    padding:10px;
+    border-radius:8px;
+    border:1px solid #e5e7eb;
+    font-size:14px;
+  }
+  textarea{ min-height:86px; resize:vertical; }
+
+  .image-preview {
+    width:120px;
+    height:120px;
+    border-radius:12px;
+    background:#f3f4f6;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+  }
+  .image-preview img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+  .modal-actions { margin-top:12px; display:flex; gap:10px; justify-content:flex-end; }
+
+  /* small screens */
+  @media (max-width:900px){
+    .page{flex-direction:column;align-items:center}
+    .right{width:100%}
+    .card{width:100%}
+    .modal-body{grid-template-columns:1fr}
+  }
 </style>
 </head>
+<body>
 
-<body class="flex items-center justify-center min-h-screen p-4">
+<!-- Page content -->
+<div class="page">
+  <div class="card" aria-labelledby="profile-heading">
+    <div class="avatar-wrap">
+      <div class="avatar" id="profileAvatar">
+        {% if session.get('user') and session['user'].get('picture') %}
+          <img id="avatarImg" src="{{ session['user']['picture'] }}" alt="profile">
+        {% else %}
+          <!-- default avatar -->
+          <img id="avatarImg" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 24 24' fill='none' stroke='%23343a40' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='8' r='4'></circle><path d='M4 21c0-4 4-7 8-7s8 3 8 7'></path></svg>" alt="avatar">
+        {% endif %}
+      </div>
 
-<div class="bg-white p-8 rounded-xl shadow-2xl max-w-md w-full text-center border-t-4 border-blue-600">
-
-    <h1 class="text-3xl font-bold text-gray-800 mb-2">Login Successful!</h1>
-    <p class="text-lg text-blue-600 font-semibold mb-6">
-        Welcome, {{ user.get('name', 'User') }}!
-    </p>
-
-    <div class="bg-gray-50 p-4 rounded-lg text-left mb-6">
-        <p class="text-gray-600">
-            <span class="font-medium text-gray-700">Email:</span>
-            <span class="break-all">{{ user.get('email', 'N/A') }}</span>
-        </p>
+      <div>
+        <div class="name" id="displayName">{{ session.get('user', {}).get('name', 'User') }}</div>
+        <div class="email" id="displayEmail">{{ session.get('user', {}).get('email', 'user@example.com') }}</div>
+      </div>
     </div>
 
-    <p class="text-sm text-gray-500 mb-8">
-        This is your protected profile page after Google login.
-    </p>
+    <div class="info-block">
+      <div class="info-row">
+        <div class="label">Bio</div>
+        <div class="value" id="displayBio">{{ session.get('user', {}).get('bio', '—') }}</div>
+      </div>
 
-    <a href="{{ url_for('logout') }}"
-       class="inline-flex items-center justify-center w-full px-6 py-3 text-base font-medium 
-              rounded-md text-white bg-red-600 hover:bg-red-700 shadow-lg">
-       Logout
-    </a>
+      <div class="info-row">
+        <div class="label">Date of birth</div>
+        <div class="value" id="displayDOB">{{ session.get('user', {}).get('dob', '—') }}</div>
+      </div>
 
+      <div class="info-row">
+        <div class="label">Gender</div>
+        <div class="value" id="displayGender">{{ session.get('user', {}).get('gender', '—') }}</div>
+      </div>
+
+      <div style="margin-top:8px">
+        <div style="font-weight:700; color:#374151; margin-bottom:8px">Skills</div>
+        <div id="displaySkills">
+          {% if session.get('user') and session['user'].get('skills') %}
+            {% for s in session['user']['skills'].split(',') %}
+              <span class="skills-badge">{{ s.strip() }}</span>
+            {% endfor %}
+          {% else %}
+            <div class="muted">No skills added</div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div style="margin-top:16px; display:flex; gap:10px;">
+        <button class="btn btn-primary" id="openEdit">Edit Details</button>
+        <a href="{{ url_for('home_page') }}" class="btn btn-ghost" style="align-self:center;">Back to Home</a>
+      </div>
+
+    </div>
+
+    <!-- Sign out full-width button -->
+    <a href="{{ url_for('logout') }}" class="signout">Sign Out</a>
+  </div>
+
+  <div class="right">
+    <div class="panel">
+      <h3>Account Overview</h3>
+      <p class="muted">Quick snapshot of your account information. Use Edit Details to update any field.</p>
+
+      <div style="margin-top:12px">
+        <strong>Logged in as</strong>
+        <div class="muted" style="margin-top:6px;">{{ session.get('user', {}).get('email', 'user@example.com') }}</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>Extra</h3>
+      <p class="muted">This area can contain other user info / statistics / links to settings or events.</p>
+    </div>
+  </div>
 </div>
 
-<!-- NAVIGATION BAR -->
+<!-- Modal (Edit) -->
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="edit-title">
+    <div class="modal-header">
+      <h2 id="edit-title">Edit Profile</h2>
+      <button id="closeModal" aria-label="Close" style="background:none;border:none;font-size:18px;cursor:pointer">&times;</button>
+    </div>
+
+    <form id="editForm" onsubmit="return false;">
+      <div class="modal-body">
+        <div>
+          <div class="form-row">
+            <label for="nameInput">Name</label>
+            <input id="nameInput" type="text" />
+          </div>
+
+          <div class="form-row">
+            <label for="emailInput">Email</label>
+            <input id="emailInput" type="email" />
+          </div>
+
+          <div class="form-row">
+            <label for="dobInput">Date of Birth</label>
+            <input id="dobInput" type="date" />
+          </div>
+
+          <div class="form-row">
+            <label for="genderInput">Gender</label>
+            <select id="genderInput">
+              <option value="">Prefer not to say</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <div class="form-row">
+            <label for="bioInput">Bio</label>
+            <textarea id="bioInput"></textarea>
+          </div>
+
+          <div class="form-row">
+            <label for="skillsInput">Skills (comma separated)</label>
+            <input id="skillsInput" type="text" placeholder="python, react, ui/ux" />
+          </div>
+
+          <div class="form-row">
+            <label>Profile picture</label>
+            <div style="display:flex;gap:12px;align-items:center">
+              <div class="image-preview" id="imgPreview">
+                <!-- preview -->
+                {% if session.get('user') and session['user'].get('picture') %}
+                  <img id="previewImg" src="{{ session['user']['picture'] }}" alt="preview">
+                {% else %}
+                  <img id="previewImg" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='8' r='4'></circle><path d='M4 21c0-4 4-7 8-7s8 3 8 7'></path></svg>" alt="preview">
+                {% endif %}
+              </div>
+              <div>
+                <input id="fileInput" type="file" accept="image/*">
+                <div style="margin-top:8px" class="muted">Choose an image to update avatar (preview shown).</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button id="cancelBtn" class="btn btn-ghost" type="button">Cancel</button>
+        <button id="saveBtn" class="btn btn-primary" type="button">Save Changes</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- NAV -->
 <nav class="bottom-nav">
+  <div class="nav-inner">
+    <div class="nav-left">
+      <a class="nav-link" href="{{ url_for('home_page') }}">
+        <!-- home icon -->
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="margin-bottom:3px"><path d="M3 9.5L12 3l9 6.5V21H15v-6H9v6H4z" stroke="#dbeafe" stroke-width="1.6" fill="none"/></svg>
+        Home
+      </a>
+    </div>
 
-    <!-- HOME ICON -->
-    <a href="{{ url_for('home_page') }}" id="nav-home">
-        <span class="icon">
-            <svg viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M3 9.5L12 3l9 6.5V21a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V9.5z"/>
-            </svg>
+    <div class="nav-divider" aria-hidden>●</div>
+
+    <div class="nav-right">
+      <a class="nav-link" href="{{ url_for('profile_page') }}">
+        <span class="nav-avatar" id="navAvatar">
+          {% if session.get('user') and session['user'].get('picture') %}
+            <img id="navAvatarImg" src="{{ session['user']['picture'] }}" alt="nav avatar">
+          {% else %}
+            <img id="navAvatarImg" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='8' r='4'></circle><path d='M4 21c0-4 4-7 8-7s8 3 8 7'></path></svg>" alt="nav avatar">
+          {% endif %}
         </span>
-        <span>Home</span>
-    </a>
-
-    <!-- PROFILE ICON OR GOOGLE IMAGE -->
-    <a href="{{ url_for('profile_page') }}" id="nav-profile">
-        <span class="icon">
-            {% if session.get('user') and session['user'].get('picture') %}
-                <img src="{{ session['user']['picture'] }}" alt="Profile">
-            {% else %}
-                <svg viewBox="0 0 24 24" fill="none"
-                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="8" r="4"></circle>
-                    <path d="M4 21c0-4 4-7 8-7s8 3 8 7"></path>
-                </svg>
-            {% endif %}
-        </span>
-        <span>Profile</span>
-    </a>
-
+        Profile
+      </a>
+    </div>
+  </div>
 </nav>
 
 <script>
-    const path = window.location.pathname;
+  // elements
+  const modalBackdrop = document.getElementById('modalBackdrop');
+  const openEditBtn = document.getElementById('openEdit');
+  const closeModalBtn = document.getElementById('closeModal');
+  const cancelBtn = document.getElementById('cancelBtn');
+  const saveBtn = document.getElementById('saveBtn');
 
-    if (path === "/home") {
-        document.getElementById("nav-home").classList.add("active");
-        document.getElementById("nav-profile").classList.remove("active");
-    }
+  const nameInput = document.getElementById('nameInput');
+  const emailInput = document.getElementById('emailInput');
+  const bioInput = document.getElementById('bioInput');
+  const dobInput = document.getElementById('dobInput');
+  const genderInput = document.getElementById('genderInput');
+  const skillsInput = document.getElementById('skillsInput');
+  const fileInput = document.getElementById('fileInput');
 
-    if (path === "/profile_page") {
-        document.getElementById("nav-profile").classList.add("active");
-        document.getElementById("nav-home").classList.remove("active");
+  const displayName = document.getElementById('displayName');
+  const displayEmail = document.getElementById('displayEmail');
+  const displayBio = document.getElementById('displayBio');
+  const displayDOB = document.getElementById('displayDOB');
+  const displayGender = document.getElementById('displayGender');
+  const displaySkills = document.getElementById('displaySkills');
+  const avatarImg = document.getElementById('avatarImg');
+  const navAvatarImg = document.getElementById('navAvatarImg');
+  const previewImg = document.getElementById('previewImg');
+
+  // populate fields from server-side values (Jinja templating)
+  function populateFields(){
+    nameInput.value = `{{ session.get('user', {}).get('name', '') }}` || '';
+    emailInput.value = `{{ session.get('user', {}).get('email', '') }}` || '';
+    bioInput.value = `{{ session.get('user', {}).get('bio', '') }}` || '';
+    dobInput.value = `{{ session.get('user', {}).get('dob', '') }}` || '';
+    genderInput.value = `{{ session.get('user', {}).get('gender', '') }}` || '';
+    skillsInput.value = `{{ session.get('user', {}).get('skills', '') }}` || '';
+
+    // current preview image already set by template; previewImg.src is correct
+  }
+
+  openEditBtn.addEventListener('click', ()=>{
+    populateFields();
+    modalBackdrop.style.display = 'flex';
+  });
+  closeModalBtn.addEventListener('click', ()=> modalBackdrop.style.display='none');
+  cancelBtn.addEventListener('click', ()=> modalBackdrop.style.display='none');
+  modalBackdrop.addEventListener('click', (e)=> { if(e.target===modalBackdrop) modalBackdrop.style.display='none'; });
+
+  // convert selected image to base64 data URL and preview
+  let selectedImageDataUrl = null;
+  fileInput.addEventListener('change', (e)=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = function(ev){
+      selectedImageDataUrl = ev.target.result; // base64 data url
+      previewImg.src = selectedImageDataUrl;
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // save - send to backend (session storage)
+  saveBtn.addEventListener('click', async ()=>{
+    const payload = {
+      name: nameInput.value.trim(),
+      email: emailInput.value.trim(),
+      bio: bioInput.value.trim(),
+      dob: dobInput.value,
+      gender: genderInput.value,
+      skills: skillsInput.value.trim(),
+      picture: selectedImageDataUrl || document.getElementById('previewImg').src || ''
+    };
+
+    // send to backend endpoint /update_profile which should save into session
+    try {
+      const res = await fetch('{{ url_for("update_profile") }}', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const json = await res.json();
+      if(json && json.success){
+        // update UI immediately
+        displayName.textContent = payload.name || 'User';
+        displayEmail.textContent = payload.email || '';
+        displayBio.textContent = payload.bio || '—';
+        displayDOB.textContent = payload.dob || '—';
+        displayGender.textContent = payload.gender || '—';
+
+        // update skills badges
+        const skillsContainer = displaySkills;
+        skillsContainer.innerHTML = '';
+        if(payload.skills){
+          payload.skills.split(',').map(s=>s.trim()).filter(Boolean).forEach(s=>{
+            const sp = document.createElement('span');
+            sp.className = 'skills-badge';
+            sp.textContent = s;
+            skillsContainer.appendChild(sp);
+          });
+        } else {
+          skillsContainer.innerHTML = '<div class="muted">No skills added</div>';
+        }
+
+        // update avatar images (card and navbar)
+        if(payload.picture){
+          avatarImg.src = payload.picture;
+          navAvatarImg.src = payload.picture;
+          previewImg.src = payload.picture;
+        }
+
+        modalBackdrop.style.display = 'none';
+      } else {
+        alert('Failed to save — server returned an error.');
+      }
+    } catch(err){
+      console.error(err);
+      alert('Failed to save profile. Check console for details.');
     }
+  });
+
+  // run once to ensure preview has image
+  (function(){
+    populateFields();
+  })();
 </script>
-
 </body>
 </html>
